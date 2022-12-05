@@ -1,82 +1,59 @@
-import React,{ Component,Fragment } from 'react';
-import config from './../../config/config'
+import React from "react";
 
-
- class currencyDropdown extends Component {
-     constructor(){
-         super()
-         this.state = {
-            value:'INR',
-            buttonToggle:true
-         }
-     }
-
-     onChnageHandler = (e) => {
-         this.setState ({value:e.target.value}) 
-     }
-     addNewCurency = () =>{
-        const _curr = this.state.value;
-        const {currenyList=[]} = this.props;
-        if(!currenyList.includes(_curr)){
-            this.props.saveNewCurrency(_curr);
-            this.toggleHandler();
-        } else {
-            alert("Currency already in above list.")
-        }
-     }
-
-     toggleHandler = () =>{
-        this.setState ({buttonToggle:!this.state.buttonToggle}) 
-     }
-
-     renderAddButton = () => {
-         return <div className="row">
-                    <button 
-                        type="button" 
-                        className="btn btn-success col-sm-6" 
-                        onClick={this.toggleHandler}
-                        >
-                        {`Add New `}
-                    </button>
-                    <button 
-                        type="button" 
-                        className="btn btn-danger col-sm-6" 
-                        onClick={e=>this.props.removeCurrency("ALL")}
-                        >
-                        {`Clear all`}
-                    </button>
-                </div>
-     }
-
-     renderSelectView = () => {
-         return <div className="row">
-                        <select 
-                            className= "col-sm-8"
-                            onChange={this.onChnageHandler} 
-                            value={this.state.value}
-                        >
-                        {config.currencyDropdown.map(item=>{
-                            return <option value={item} >{item}</option>
-                        })}
-                    </select>
-                    <button type="button" 
-                            className="btn btn-success col-sm-4" 
-                            onClick={this.addNewCurency}
-                            >
-                            {`Submit`}
-                    </button>
-                </div>
-     }
-
-
-     render () {
-        return <Fragment>
-                {this.state.buttonToggle 
-                    ? this.renderAddButton() 
-                        : this.renderSelectView()
-                }   
-                </Fragment>
-        }
+function Converter(props) {
+  // const firstData = props.data.filter((rate) => {
+  //   return rate !== props.secondInput;
+  // });
+  // const secData = props.data.filter((rate) => {
+  //   return rate !== props.firstInput;
+  // });
+  return (
+    <div className="conveter_container">
+      <p>
+        {props.fromAmount} {props.firstInput} is eqauls to
+      </p>
+      <h3>
+        {props.toAmount} {props.secondInput}
+      </h3>
+      <div>
+        <select value={props.firstInput} onChange={props.handleFromCurreny}>
+          {props.data
+            .filter((I) => I !== props.secondInput)
+            .map((rate, index) => {
+              return (
+                <option key={index} value={rate}>
+                  {rate}
+                </option>
+              );
+            })}
+        </select>
+        <input
+          type="number"
+          value={props.fromAmount}
+          onChange={props.onMoneyChangeFrom}
+          min="0"
+        />
+      </div>
+      <div>
+        <select value={props.secondInput} onChange={props.handleToCurrency}>
+          {props.data
+            .filter((I) => I !== props.firstInput)
+            .map((rate, index) => {
+              return (
+                <option key={index} value={rate}>
+                  {rate}
+                </option>
+              );
+            })}
+        </select>
+        <input
+          type="number"
+          value={props.toAmount}
+          onChange={props.onMoneyChangeTo}
+          min="0"
+        />
+      </div>
+    </div>
+  );
 }
-
-export default currencyDropdown;
+export default Converter;
